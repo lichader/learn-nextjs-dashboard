@@ -1,11 +1,11 @@
-import bcrypt from 'bcrypt';
-import postgres from 'postgres';
-import { invoices, customers, revenue, users } from '../lib/placeholder-data';
 import bcrypt from "bcryptjs";
+import postgres from "postgres";
+import { invoices, customers, revenue, users } from "../lib/placeholder-data";
 
-const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
+const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 
 async function seedUsers() {
+  console.log("Seeding users");
   await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
   await sql`
     CREATE TABLE IF NOT EXISTS users (
@@ -27,10 +27,12 @@ async function seedUsers() {
     }),
   );
 
+  console.log("Seeded users");
   return insertedUsers;
 }
 
 async function seedInvoices() {
+  console.log("seeding invoices");
   await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
 
   await sql`
@@ -53,10 +55,12 @@ async function seedInvoices() {
     ),
   );
 
+  console.log("seeded invoices");
   return insertedInvoices;
 }
 
 async function seedCustomers() {
+  console.log("seeding customers");
   await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
 
   await sql`
@@ -78,10 +82,12 @@ async function seedCustomers() {
     ),
   );
 
+  console.log("seeded customers");
   return insertedCustomers;
 }
 
 async function seedRevenue() {
+  console.log("seeding revenue");
   await sql`
     CREATE TABLE IF NOT EXISTS revenue (
       month VARCHAR(4) NOT NULL UNIQUE,
@@ -99,6 +105,7 @@ async function seedRevenue() {
     ),
   );
 
+  console.log("seeded revenue");
   return insertedRevenue;
 }
 
@@ -108,11 +115,12 @@ export async function GET() {
       seedUsers(),
       seedCustomers(),
       seedInvoices(),
-      seedRevenue(),
+      // seedRevenue(),
     ]);
 
-    return Response.json({ message: 'Database seeded successfully' });
+    return Response.json({ message: "Database seeded successfully" });
   } catch (error) {
+    console.error(error);
     return Response.json({ error }, { status: 500 });
   }
 }
