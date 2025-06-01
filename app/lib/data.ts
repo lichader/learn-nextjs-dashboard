@@ -116,6 +116,8 @@ export async function fetchFilteredInvoices(
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
 
+    console.log(invoices);
+
     return invoices;
   } catch (error) {
     console.error("Database Error:", error);
